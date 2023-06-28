@@ -66,6 +66,7 @@ defmodule LightningWeb.WorkflowLive.Edit do
                     on_change={&send_form_changed/1}
                     form={job_form}
                     credentials={@credentials}
+                    current_user={@current_user}
                     cancel_url={
                       ~p"/projects/#{@project.id}/w/#{@workflow.id || "new"}"
                     }
@@ -182,7 +183,8 @@ defmodule LightningWeb.WorkflowLive.Edit do
        project: project,
        selected_edge: nil,
        selected_job: nil,
-       selected_trigger: nil
+       selected_trigger: nil,
+       current_user: socket.assigns.current_user
      )}
   end
 
