@@ -31,6 +31,9 @@ defmodule Lightning.WorkOrders do
 
   alias Lightning.Repo
   alias Lightning.WorkOrder
+  alias Lightning.Attempt
+
+  import Ecto.Query
 
   # @doc """
   # Create a new Workorder.
@@ -42,11 +45,21 @@ defmodule Lightning.WorkOrders do
     trigger = Keyword.get(opts, :trigger)
     dataclip = Keyword.get(opts, :dataclip)
 
+    Repo.all(Lightning.Workflows.Node) |> IO.inspect()
+
+    workflow_node_id = from(n in Lightning.Workflows.Node,
+      where: n.workflow_id == ^workflow.id and n.trigger_id == ^trigger.id,
+      select: n.id
+    )
+    |> Repo.one()
+    |> IO.inspect()
+
     %WorkOrder{}
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_assoc(:workflow, workflow)
     |> Ecto.Changeset.put_assoc(:trigger, trigger)
     |> Ecto.Changeset.put_assoc(:dataclip, dataclip)
+    |> Ecto.Changeset.put_assoc(:attempts, [%Attempt{starting_node_id: workflow_node_id}])
     |> Ecto.Changeset.validate_required([:workflow, :trigger, :dataclip])
     |> Ecto.Changeset.assoc_constraint(:workflow)
     |> Repo.insert()

@@ -35,5 +35,11 @@ defmodule Lightning.WorkOrdersTest do
     assert workorder.workflow_id == workflow.id
     assert workorder.trigger_id == trigger.id
     assert workorder.dataclip_id == dataclip.id
+
+    [attempt] = workorder.attempts
+
+    # assert attempt.trigger.id == trigger.id
+
+    attempt |> Repo.reload!() |> Repo.preload(:trigger) |> IO.inspect()
   end
 end

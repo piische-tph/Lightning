@@ -16,9 +16,5 @@ defmodule Lightning.Repo.Migrations.MoveInvocationReasonToWorkorders do
       FROM invocation_reasons
       WHERE work_orders.reason_id = invocation_reasons.id
     """, ""
-
-    alter table(:attempt) do
-      modify :reason_id, :binary_id, null: true, from: {:binary_id, null: false}
-    end
   end
 end
