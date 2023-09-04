@@ -10,6 +10,9 @@ and this project adheres to
 
 ### Added
 
+- Make job names unique per workflow
+  [#1053](https://github.com/OpenFn/Lightning/issues/1053)
+
 ### Changed
 
 ### Fixed
