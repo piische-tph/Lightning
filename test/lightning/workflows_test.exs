@@ -87,19 +87,19 @@ defmodule Lightning.WorkflowsTest do
     end
   end
 
-  describe "workflows and edges" do
-    test "get_edge_by_webhook/1 returns the job for a path" do
-      %{job: _job, trigger: trigger, edge: edge} =
-        JobsFixtures.workflow_job_fixture()
+  describe "finders" do
+    test "get_webhook_trigger/1 returns the trigger for a path" do
+      %{triggers: [trigger]} =
+        insert(:simple_workflow) |> Repo.preload(:triggers)
 
-      assert Workflows.get_edge_by_webhook(trigger.id).id == edge.id
+      assert Workflows.get_webhook_trigger(trigger.id).id == trigger.id
 
       Ecto.Changeset.change(trigger, custom_path: "foo")
       |> Lightning.Repo.update!()
 
-      assert Workflows.get_edge_by_webhook(trigger.id) == nil
+      assert Workflows.get_webhook_trigger(trigger.id) == nil
 
-      assert Workflows.get_edge_by_webhook("foo").id == edge.id
+      assert Workflows.get_webhook_trigger("foo").id == trigger.id
     end
 
     test "get_jobs_for_cron_execution/0 returns jobs to run for a given time" do
